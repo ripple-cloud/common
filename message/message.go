@@ -18,12 +18,12 @@ type Message struct {
 const (
 	Noop MsgType = iota
 
-	// messages an app will send
+	// messages a service will send
 	Register
 	Deregister
 	Publish
 
-	// messages an app will receive
+	// messages a service will receive
 	Request
 	Ack
 	Error
@@ -55,8 +55,8 @@ func New() *Message {
 	}
 }
 
-func NewRegister(id string, meta map[string]string) *Message {
-	meta["id"] = id
+func NewRegister(topic string, meta map[string]string) *Message {
+	meta["topic"] = topic
 	return &Message{
 		Type: Register,
 		Meta: meta,
@@ -64,16 +64,17 @@ func NewRegister(id string, meta map[string]string) *Message {
 	}
 }
 
-func NewDeregister(id string) *Message {
+func NewDeregister(topic string, meta map[string]string) *Message {
+	meta["topic"] = topic
 	return &Message{
 		Type: Deregister,
-		Meta: map[string]string{"id": id},
+		Meta: meta,
 		Body: []byte{},
 	}
 }
 
-func NewRequest(id string, meta map[string]string, body []byte) *Message {
-	meta["id"] = id
+func NewRequest(topic string, meta map[string]string, body []byte) *Message {
+	meta["topic"] = topic
 	return &Message{
 		Type: Request,
 		Meta: meta,
@@ -81,8 +82,8 @@ func NewRequest(id string, meta map[string]string, body []byte) *Message {
 	}
 }
 
-func NewPublish(id string, meta map[string]string, body []byte) *Message {
-	meta["id"] = id
+func NewPublish(topic string, meta map[string]string, body []byte) *Message {
+	meta["topic"] = topic
 	return &Message{
 		Type: Publish,
 		Meta: meta,
